@@ -1,18 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Create new letter{% endblock %}
 
 {% block stylesheets %}
     <style>
         body {
             padding-top: 50px;
         }
-
-        .starter-template {
-            padding: 40px 15px;
-            text-align: center;
-        }
-
     </style>
 {% endblock %}
 
@@ -21,10 +15,9 @@
 
     <div class="container">
 
-        <div class="starter-template">
-            <h1>Welcome to jimbox!</h1>
-            <p class="lead">Use the buttons above to select an action.</p>
-        </div>
+        <h1>Create new letter</h1>
+
+        {{ include('widgets/letterform.html.twig') }}
 
     </div><!-- /.container -->
 {% endblock %}

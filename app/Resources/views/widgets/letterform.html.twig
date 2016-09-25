@@ -1,0 +1,26 @@
+{{ form_start(letterForm, {'action': path('letters_new'), 'attr': {'id': 'letter_form'}}) }}
+    <div class="row">
+        {% for child in [letterForm.nameFirst, letterForm.nameLast] %}
+            <div class="form-group col-sm-6">
+                {{ form_label(child) }}
+                {{ form_errors(child) }}
+                {{ form_widget(child, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        {% endfor %}
+        {% for child in [letterForm.originYear, letterForm.rating, letterForm.letterType, letterForm.recipientCategory] %}
+            <div class="form-group col-sm-3">
+                {{ form_label(child) }}
+                {{ form_errors(child) }}
+                {{ form_widget(child, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        {% endfor %}
+        {% for child in [letterForm.comment] %}
+            <div class="form-group col-sm-12">
+                {{ form_label(child) }}
+                {{ form_errors(child) }}
+                {{ form_widget(child, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        {% endfor %}
+    </div>
+    <input type="submit" value="Submit" class="btn btn-primary" />
+{{ form_end(letterForm) }}
