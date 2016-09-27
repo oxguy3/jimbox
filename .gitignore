@@ -31,6 +31,10 @@
 # Assets and user uploads
 /web/bundles/
 /web/uploads/
+/web/css/
+/web/js/
+/web/assetic/
+/web/fonts/
 
 # Assets managed by Bower
 /web/assets/vendor/

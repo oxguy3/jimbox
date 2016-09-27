@@ -74,48 +74,67 @@ assetic:
     filters:
         cssrewrite: ~
     assets:
-        bootstrap_js:
+        base_js:
             inputs:
-                - %kernel.root_dir%/../vendor/twitter/bootstrap/dist/js/bootstrap.js
-        bootstrap_css:
+                - "%kernel.root_dir%/../vendor/components/jquery/jquery.js"
+                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/js/bootstrap.js"
+        base_css:
             inputs:
-                - %kernel.root_dir%/../vendor/twitter/bootstrap/dist/css/bootstrap.css
-                - %kernel.root_dir%/../vendor/twitter/bootstrap/dist/css/bootstrap-theme.css
-            filters: [cssrewrite]
+                - "@AppBundle/Resources/public/css/cerulean.min.css"
+                - "@AppBundle/Resources/public/css/dataTable.bootstrap.min.css"
+            #filters: [cssrewrite]
+            output: "css/cerulean.min.css"
 
         bootstrap_glyphicons_ttf:
             inputs:
-                - %kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf
+                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf"
             output: "fonts/glyphicons-halflings-regular.ttf"
         bootstrap_glyphicons_eot:
             inputs:
-                - %kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.eot
+                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.eot"
             output: "fonts/glyphicons-halflings-regular.eot"
         bootstrap_glyphicons_svg:
             inputs:
-                - %kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.svg
+                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.svg"
             output: "fonts/glyphicons-halflings-regular.svg"
         bootstrap_glyphicons_woff:
             inputs:
-                - %kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.woff
+                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.woff"
             output: "fonts/glyphicons-halflings-regular.woff"
-
-        jquery:
+        bootstrap_glyphicons_woff2:
             inputs:
-                - %kernel.root_dir%/../vendor/components/jquery/jquery.js
+                - "%kernel.root_dir%/../vendor/twitter/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2"
+            output: "fonts/glyphicons-halflings-regular.woff2"
 
-aws:
-    version: latest
-    region: us-east-1
-    credentials:
-        key: not-a-real-key
-        secret: "@@not-a-real-secret" # this will be escaped as '@not-a-real-secret'
-    S3:
-        version: '2006-03-01'
+        ie9_shims:
+            inputs:
+                - "@AppBundle/Resources/public/js/html5shiv.min.js"
+                - "@AppBundle/Resources/public/js/respond.min.js"
+            output: "js/ie9shims.min.js"
+        datatables_js:
+            inputs:
+                - "@AppBundle/Resources/public/js/dataTables.min.js"
+                - "@AppBundle/Resources/public/js/dataTables.bootstrap.min.js"
+
+knp_gaufrette:
+    adapters:
+        jimbox_data:
+            aws_s3:
+                service_id: 'acme.aws_s3.client'
+                bucket_name: '%aws_s3_bucket%'
+                options:
+                    directory: 'letters'
+    filesystems:
+        letters:
+            adapter: jimbox_data
+            alias: letters_filesystem
 
 services:
-    a_service:
-        class: Aws\Credentials\Credentials
+    acme.aws_s3.client:
+        class: Aws\S3\S3Client
+        factory: Aws\S3\S3Client
         arguments:
-            - a-different-fake-key
-            - a-different-fake-secret
+            -
+                key: '%aws_key%'
+                secret: '%aws_secret%'
+                region: '%aws_region%'

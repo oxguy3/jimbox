@@ -1,0 +1,53 @@
+{% extends '@App/base.html.twig' %}
+
+{% block title %}Letter #{{ letter.id }}{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        body {
+            padding-top: 50px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {{ include('AppBundle:widgets:nav.html.twig') }}
+
+    <div class="container">
+        <div class="row">
+            <h1>Letter #{{ letter.id }}</h1>
+
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th style="width: 30%;">Name</th>
+                        <td style="width: 70%;">{{ letter.nameFirst }} {{ letter.nameLast }}</td>
+                    </tr>
+                    <tr>
+                        <th>Origin Year</th>
+                        <td>{{ letter.originYear }}</td>
+                    </tr>
+                    <tr>
+                        <th>Rating</th>
+                        <td>{{ letter.rating }}</td>
+                    </tr>
+                    <tr>
+                        <th>Letter Type</th>
+                        <td>{{ letter.letterType }}</td>
+                    </tr>
+                    <tr>
+                        <th>Recipient Category</th>
+                        <td>{{ letter.recipientCategory }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Comment</h3>
+            <div class="well">{{ letter.comment }}</div>
+        </div>
+
+    </div><!-- /.container -->
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}

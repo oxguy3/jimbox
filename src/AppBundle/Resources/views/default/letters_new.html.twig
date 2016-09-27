@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends '@App/base.html.twig' %}
 
 {% block title %}Create new letter{% endblock %}
 
@@ -11,13 +11,13 @@
 {% endblock %}
 
 {% block body %}
-    {{ include('widgets/nav.html.twig') }}
+    {{ include('AppBundle:widgets:nav.html.twig') }}
 
     <div class="container">
 
         <h1>Create new letter</h1>
 
-        {{ include('widgets/letterform.html.twig') }}
+        {{ include('AppBundle:widgets:letterform.html.twig') }}
 
     </div><!-- /.container -->
 {% endblock %}

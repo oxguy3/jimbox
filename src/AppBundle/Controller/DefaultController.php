@@ -17,7 +17,7 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        return $this->render('default/index.html.twig', array());
+        return $this->render('AppBundle:default:index.html.twig', array());
     }
 
     /**
@@ -49,7 +49,7 @@ class DefaultController extends Controller
             //return $this->redirectToRoute('task_success');
         }
 
-        return $this->render('default/letters_new.html.twig', array(
+        return $this->render('AppBundle:default:letters_new.html.twig', array(
             'letterForm' => $form->createView(),
         ));
     }
@@ -61,13 +61,25 @@ class DefaultController extends Controller
      */
     public function lettersListAction(Request $request)
     {
-//        $repo = $this->getDoctrine()->getRepository('AppBundle:Letter');
-//        $query = $repo->createQueryBuilder('l')
-//            ->orderBy('l.nameLast', 'ASC')
-//            ->getQuery();
-//        $letters = $query->getResult();
+        return $this->render('AppBundle:default:letters_list.html.twig');
+    }
 
-        return $this->render('default/letters_list.html.twig');
+    /**
+     * @Route("/letter/{id}", name="letter_view")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function letterViewAction(Request $request, $id)
+    {
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Letter');
+        $qb = $repo->createQueryBuilder('l')
+            ->where('l.id = :id')
+            ->setParameter('id', $id);
+        $letter = $qb->getQuery()->getOneOrNullResult();
+
+        return $this->render('AppBundle:default:letter_view.html.twig', [
+            'letter' => $letter->jsonSerialize(),
+        ]);
     }
 
     /**
@@ -77,9 +89,6 @@ class DefaultController extends Controller
      */
     public function lettersListJsonAction(Request $request)
     {
-//        print_r($request);
-//        return new Response("butts");
-
         // error message to pass to DataTables
         $error = '';
 
@@ -99,6 +108,11 @@ class DefaultController extends Controller
             // check that their array is a consecutively-numbered non-associative array
             if (intval($key) !== $index++) {
                 return $this->generateDataTablesError("Columns array is not sequentially indexed.");
+            }
+
+            // if a column is marked unsearchable and unorderable, skip it
+            if ($value['searchable'] == 'false' && $value['orderable'] == 'false') {
+                continue;
             }
 
             // check that they gave us a legitimate column name
@@ -124,7 +138,11 @@ class DefaultController extends Controller
         $order = $request->get('order');
         $hasResetPreviousOrdering = false;
         foreach ($order as $o) {
-            $colName = 'l.'.$columns[intval($o['column'])]['data'];
+            $column  = $columns[intval($o['column'])];
+            if ($column['orderable'] == 'false') {
+                return $this->generateDataTablesError("Tried to order an non-orderable column.");
+            }
+            $colName = 'l.'.$column['data'];
             $dir     = $o['dir'] == "asc" ? "ASC" : "DESC";
 
             // we need to use orderBy instead of addOrderBy for the first order clause, to remove default ordering

@@ -57,9 +57,9 @@ class Letter implements \JsonSerializable
     private $letterType;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="recipientCategory", type="integer", nullable=true)
+     * @ORM\Column(name="recipientCategory", type="string", length=255, nullable=true)
      */
     private $recipientCategory;
 
@@ -264,7 +264,7 @@ class Letter implements \JsonSerializable
     /**
      * Get recipientCategory
      *
-     * @return int
+     * @return string
      */
     public function getRecipientCategory()
     {

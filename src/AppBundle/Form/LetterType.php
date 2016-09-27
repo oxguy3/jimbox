@@ -18,11 +18,11 @@ class LetterType extends AbstractType
         $builder
             ->add('nameFirst', TextType::class, [
                 'required' => false,
-                'label'    => 'First Name',
+                'label'    => 'First name',
             ])
             ->add('nameLast', TextType::class, [
                 'required' => true,
-                'label'    => 'Last Name',
+                'label'    => 'Last name',
             ])
             ->add('originYear', IntegerType::class, [
                 'required' => false,
@@ -31,28 +31,28 @@ class LetterType extends AbstractType
                 'required' => true,
                 'choices'  => [
                     0 => '0 - None',
-                    1 => '1 - Excellent',
+                    1 => '1 - Poor',
                     2 => '2 - Fair',
-                    3 => '3 - Poor',
+                    3 => '3 - Excellent',
                 ],
             ])
             ->add('letterType', ChoiceType::class, [
                 'required' => true,
                 'choices'  => [
-                    'letter'   => 'Letter',
-                    'postcard' => 'Postcard',
-                    'note'     => 'Note',
-                    'other'    => 'Other',
+                    'letter',
+                    'postcard',
+                    'note',
+                    'other',
                 ],
             ])
             ->add('recipientCategory', ChoiceType::class, [
                 'required' => true,
                 'choices'  => [
-                    'reader' => 'Reader',
-                    'critic' => 'Critic',
-                    'family' => 'Family',
-                    'lover'  => 'Lover',
-                    'other'  => 'Other',
+                    'reader',
+                    'critic',
+                    'family',
+                    'lover',
+                    'other',
                 ],
             ])
             ->add('comment', TextareaType::class, [

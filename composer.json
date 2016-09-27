@@ -24,7 +24,8 @@
         "twitter/bootstrap": "3.*",
         "components/jquery": "1.11.1",
         "symfony/assetic-bundle": "^2.8",
-        "aws/aws-sdk-php-symfony": "^1.1"
+        "aws/aws-sdk-php": "2.*",
+        "knplabs/knp-gaufrette-bundle": "~0.3"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",

@@ -17,3 +17,9 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    # Amazon Web Services credentials
+    aws_key: ReplaceMe
+    aws_secret: ReplaceMe
+    aws_region: us-east-1
+    aws_s3_bucket: jimbox
