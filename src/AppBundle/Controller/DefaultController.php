@@ -8,7 +8,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
@@ -27,7 +26,6 @@ class DefaultController extends Controller
      */
     public function lettersNewAction(Request $request)
     {
-        // just setup a fresh $task object (remove the dummy data)
         $letter = new Letter();
 
         $form = $this->createForm(LetterType::class, $letter);
@@ -35,18 +33,13 @@ class DefaultController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $form->getData() holds the submitted values
-            // but, the original `$task` variable has also been updated
             $letter = $form->getData();
 
-            // ... perform some action, such as saving the task to the database
-            // for example, if Task is a Doctrine entity, save it!
             $em = $this->getDoctrine()->getManager();
             $em->persist($letter);
             $em->flush();
 
-            return new Response("<html><body><h1>it's done!</h1><p><a href='/letters'>click here</a> (this page will be less ugly later, i promise)</p></body></html>");
-            //return $this->redirectToRoute('task_success');
+            return $this->redirectToRoute('letter_view', ['id' => $letter->getId()]);
         }
 
         return $this->render('AppBundle:default:letters_new.html.twig', array(

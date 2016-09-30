@@ -51,4 +51,6 @@
 
 # Backup entities generated with doctrine:generate:entities command
 */Entity/*~
+
+# SQLite database
 data.db3

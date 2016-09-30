@@ -24,7 +24,7 @@
                         <td style="width: 70%;">{{ letter.nameFirst }} {{ letter.nameLast }}</td>
                     </tr>
                     <tr>
-                        <th>Origin Year</th>
+                        <th>Origin year</th>
                         <td>{{ letter.originYear }}</td>
                     </tr>
                     <tr>
@@ -32,12 +32,16 @@
                         <td>{{ letter.rating }}</td>
                     </tr>
                     <tr>
-                        <th>Letter Type</th>
+                        <th>Letter type</th>
                         <td>{{ letter.letterType }}</td>
                     </tr>
                     <tr>
-                        <th>Recipient Category</th>
+                        <th>Recipient category</th>
                         <td>{{ letter.recipientCategory }}</td>
+                    </tr>
+                    <tr>
+                        <th>Uploaded on</th>
+                        <td>{{ letter.dateCreated|date("D, F d, Y \\a\\t g:i a") }}</td>
                     </tr>
                 </tbody>
             </table>

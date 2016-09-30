@@ -21,7 +21,7 @@
 
             <div class="col-xs-12">
                 <h1>Letters</h1>
-                <table id="letters" class="table table-striped table-responsive">
+                <table id="letters" class="table table-striped table-responsive" width="100%">
                     <thead>
                         <tr>
                             <th class="no-search"></th>
@@ -67,11 +67,9 @@
                 ajax: {
                     url: "{{ path('api_letters') }}",
                     "dataSrc": function(json) {
-                        console.log(json);
                         for (var i = 0; i<json.data.length; i++) {
                             json.data[i]['_buttons'] = '<a href="/letter/'+json.data[i]['id']+'" class="btn btn-primary btn-xs" title="View details"><span class="glyphicon glyphicon-eye-open"></span></a>';
                         }
-                        console.log(json);
                         return json.data;
                     }
                 },
