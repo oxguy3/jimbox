@@ -115,6 +115,9 @@ assetic:
             inputs:
                 - "@AppBundle/Resources/public/js/dataTables.min.js"
                 - "@AppBundle/Resources/public/js/dataTables.bootstrap.min.js"
+        dropzone_js:
+            inputs:
+                - "@AppBundle/Resources/public/js/dropzone.min.js"
 
 knp_gaufrette:
     adapters:
