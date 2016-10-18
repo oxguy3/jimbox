@@ -23,3 +23,9 @@ parameters:
     aws_secret: ReplaceMe
     aws_region: us-east-1
     aws_s3_bucket: jimbox
+
+    # login accounts
+    users:
+        jimbox:
+            password: changeme
+            roles: ROLE_USER

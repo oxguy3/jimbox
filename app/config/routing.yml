@@ -1,7 +1,7 @@
 app:
     resource: "@AppBundle/Controller/DefaultController.php"
     type:     annotation
-    prefix:   /app
+    prefix:   /jimbox
 security:
     resource: "@AppBundle/Controller/SecurityController.php"
     type:     annotation
@@ -10,7 +10,7 @@ root:
     path: /
     defaults:
         _controller: FrameworkBundle:Redirect:urlRedirect
-        path: /app
+        path: /jimbox
         permanent: true
 logout:
     path: /logout
