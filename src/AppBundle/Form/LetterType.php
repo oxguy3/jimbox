@@ -39,20 +39,20 @@ class LetterType extends AbstractType
             ->add('letterType', ChoiceType::class, [
                 'required' => true,
                 'choices'  => [
-                    'letter',
-                    'postcard',
-                    'note',
-                    'other',
+                    'letter'   => 'letter',
+                    'postcard' => 'postcard',
+                    'note'     => 'note',
+                    'other'    => 'other',
                 ],
             ])
             ->add('recipientCategory', ChoiceType::class, [
                 'required' => true,
                 'choices'  => [
-                    'reader',
-                    'critic',
-                    'family',
-                    'lover',
-                    'other',
+                    'reader' => 'reader',
+                    'critic' => 'critic',
+                    'family' => 'family',
+                    'lover'  => 'lover',
+                    'other'  => 'other',
                 ],
             ])
             ->add('comment', TextareaType::class, [
