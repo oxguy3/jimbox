@@ -27,6 +27,4 @@ security:
         - { path: ^/jimbox, roles: ROLE_USER }
 
     encoders:
-        Symfony\Component\Security\Core\User\User:
-            algorithm: bcrypt
-            cost:      13
+        Symfony\Component\Security\Core\User\User: plaintext
