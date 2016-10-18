@@ -63,7 +63,7 @@
             <div class="col-xs-12">
                 <h1>
                     Letter #{{ letter.id|e }}
-                    <a href="{{ letter.id|url_encode }}/edit" class="btn btn-primary btn-sm" style="margin-left:20px">
+                    <a href="{{ path('letter_edit', {'id': letter.id}) }}" class="btn btn-primary btn-sm" style="margin-left:20px">
                         <span class="glyphicon glyphicon-pencil"></span>&nbsp;
                         Edit
                     </a>

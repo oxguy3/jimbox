@@ -17,7 +17,7 @@
 
         <h1>Editing Letter #{{ letter.id }}</h1>
 
-        {{ include('AppBundle:widgets:letterform.html.twig') }}
+        {{ include('AppBundle:widgets:letterform.html.twig', {'action': path('letter_edit', {'id': letter.id})}) }}
 
     </div><!-- /.container -->
 {% endblock %}

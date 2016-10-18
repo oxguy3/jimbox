@@ -1,4 +1,4 @@
-{{ form_start(letterForm, {'action': path('letters_new'), 'attr': {'id': 'letter_form'}}) }}
+{{ form_start(letterForm, {'action': action, 'attr': {'id': 'letter_form'}}) }}
     <div class="row">
         {% for child in [letterForm.nameFirst, letterForm.nameLast] %}
             <div class="form-group col-sm-6">

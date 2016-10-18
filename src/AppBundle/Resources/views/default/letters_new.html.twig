@@ -17,7 +17,7 @@
 
         <h1>Create new letter</h1>
 
-        {{ include('AppBundle:widgets:letterform.html.twig') }}
+        {{ include('AppBundle:widgets:letterform.html.twig', {'action': path('letters_new')}) }}
 
     </div><!-- /.container -->
 {% endblock %}

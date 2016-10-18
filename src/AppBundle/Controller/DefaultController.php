@@ -170,17 +170,13 @@ class DefaultController extends Controller
 
 
     /**
-     * @Route("/letter/{id}/edit", name="letters_edit")
+     * @Route("/letter/{id}/edit", name="letter_edit")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function letterEditAction(Request $request, $id)
     {
-        $repoLtrs = $this->getDoctrine()->getRepository('AppBundle:Letter');
-        $qbLtrs   = $repoLtrs->createQueryBuilder('l')
-            ->where('l.id = :id')
-            ->setParameter('id', $id);
-        $letter = $qbLtrs->getQuery()->getOneOrNullResult();
+        $letter = $this->getDoctrine()->getRepository('AppBundle:Letter')->find($id);
 
         if (is_null($letter)) {
             throw $this->createNotFoundException('The letter does not exist.');
@@ -193,7 +189,6 @@ class DefaultController extends Controller
             $letter = $form->getData();
 
             $em = $this->getDoctrine()->getManager();
-            $em->persist($letter);
             $em->flush();
 
             return $this->redirectToRoute('letter_view', ['id' => $letter->getId()]);
