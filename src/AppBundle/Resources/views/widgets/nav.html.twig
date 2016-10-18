@@ -11,7 +11,16 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li><a href="{{ path('letters_list') }}">Letters</a></li>
+                <li>
+                    <a href="{{ path('letters_list') }}">
+                        <span class="glyphicon glyphicon-list"></span> Letters
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('logout') }}">
+                        <span class="glyphicon glyphicon-log-out"></span> Log out
+                    </a>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li>

@@ -1,3 +1,20 @@
 app:
-    resource: "@AppBundle/Controller/"
+    resource: "@AppBundle/Controller/DefaultController.php"
     type:     annotation
+    prefix:   /app
+security:
+    resource: "@AppBundle/Controller/SecurityController.php"
+    type:     annotation
+    prefix:   /
+root:
+    path: /
+    defaults:
+        _controller: FrameworkBundle:Redirect:urlRedirect
+        path: /app
+        permanent: true
+logout:
+    path: /logout
+#
+#login:
+#    path:     /login
+#    defaults: { _controller: AppBundle:Security:login }

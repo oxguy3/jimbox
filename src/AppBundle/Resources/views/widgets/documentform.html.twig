@@ -1,4 +1,4 @@
-{{ form_start(documentForm, {'action': path('document_upload', {'id': letterId}), 'attr': {'id': 'document_form', 'class': 'dropzone'}}) }}
+{{ form_start(documentForm, {'action': path('document_upload', {'id': letterId}), 'attr': {'id': 'document_form'}}) }}
     {% for child in [documentForm.file] %}
         <div class="form-group col-sm-12">
             {{ form_errors(child) }}

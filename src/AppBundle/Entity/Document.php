@@ -38,7 +38,7 @@ class Document
     /**
      * This is not a column in the database but it's mapping a field from the form
      *
-     * @Assert\File(maxSize="100000000", mimeTypes={ "application/pdf", "image/jpeg", "image/png" })
+     * @Assert\File(maxSize="100000000")
      */
     public $file;
 
