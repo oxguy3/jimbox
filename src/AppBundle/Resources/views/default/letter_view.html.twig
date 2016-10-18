@@ -7,6 +7,51 @@
         body {
             padding-top: 50px;
         }
+
+        /* Mimic table appearance */
+        div.table {
+            display: table;
+        }
+        div.table .file-row {
+            display: table-row;
+        }
+        div.table .file-row > div {
+            display: table-cell;
+            vertical-align: top;
+            border-top: 1px solid #ddd;
+            padding: 8px;
+        }
+        div.table .file-row:nth-child(odd) {
+            background: #f9f9f9;
+        }
+
+
+        /* The total progress gets shown by event listeners */
+        #total-progress {
+            opacity: 0;
+            transition: opacity 0.3s linear;
+        }
+
+        /* Hide the progress bar when finished */
+        #previews .file-row.dz-success .progress {
+            opacity: 0;
+            transition: opacity 0.3s linear;
+        }
+
+        /* Hide the delete button initially */
+        #previews .file-row .delete {
+            display: none;
+        }
+
+        /* Hide the start and cancel buttons and show the delete button */
+
+        #previews .file-row.dz-success .start,
+        #previews .file-row.dz-success .cancel {
+            display: none;
+        }
+        #previews .file-row.dz-success .delete {
+            display: block;
+        }
     </style>
 {% endblock %}
 
@@ -15,39 +60,75 @@
 
     <div class="container">
         <div class="row">
-            <h1>Letter #{{ letter.id }}</h1>
+            <div class="col-xs-12">
+                <h1>
+                    Letter #{{ letter.id|e }}
+                    <a href="{{ letter.id|url_encode }}/edit" class="btn btn-primary btn-sm" style="margin-left:20px">
+                        <span class="glyphicon glyphicon-pencil"></span>&nbsp;
+                        Edit
+                    </a>
+                </h1>
 
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <th style="width: 30%;">Name</th>
-                        <td style="width: 70%;">{{ letter.nameFirst }} {{ letter.nameLast }}</td>
-                    </tr>
-                    <tr>
-                        <th>Origin year</th>
-                        <td>{{ letter.originYear }}</td>
-                    </tr>
-                    <tr>
-                        <th>Rating</th>
-                        <td>{{ letter.rating }}</td>
-                    </tr>
-                    <tr>
-                        <th>Letter type</th>
-                        <td>{{ letter.letterType }}</td>
-                    </tr>
-                    <tr>
-                        <th>Recipient category</th>
-                        <td>{{ letter.recipientCategory }}</td>
-                    </tr>
-                    <tr>
-                        <th>Uploaded on</th>
-                        <td>{{ letter.dateCreated|date("D, F d, Y \\a\\t g:i a") }}</td>
-                    </tr>
-                </tbody>
-            </table>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th style="width: 30%;">Name</th>
+                            <td style="width: 70%;">{{ letter.nameFirst|e }} {{ letter.nameLast|e }}</td>
+                        </tr>
+                        <tr>
+                            <th>Origin year</th>
+                            <td>{{ letter.originYear|e }}</td>
+                        </tr>
+                        <tr>
+                            <th>Rating</th>
+                            <td>{{ letter.rating|e }}</td>
+                        </tr>
+                        <tr>
+                            <th>Letter type</th>
+                            <td>{{ letter.letterType|e }}</td>
+                        </tr>
+                        <tr>
+                            <th>Recipient category</th>
+                            <td>{{ letter.recipientCategory|e }}</td>
+                        </tr>
+                        <tr>
+                            <th>Uploaded on</th>
+                            <td>{{ letter.dateCreated|date("D, F d, Y \\a\\t g:i a") }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-            <h3>Comment</h3>
-            <div class="well">{{ letter.comment }}</div>
+            <div class="col-sm-6">
+                <h3>Comment</h3>
+                <div class="well">{{ letter.comment }}</div>
+            </div>
+
+            <div class="col-sm-6">
+
+                <h3>Documents</h3>
+                {% if documents|length < 1 %}
+                    <p>No documents found.</p>
+                {% else %}
+                    <ul class="list-group">
+                        {% for d in documents %}
+                            <li class="list-group-item">
+                                <a href="#" class="pull-right text-danger">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </a>
+                                <a href="{{ letter.id }}/docs/get/{{ d.name|url_encode }}">
+                                    {{ d.name|e }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <h4>Upload new file</h4>
+
+                {% set letterId = letter.id %}
+                {{ include('AppBundle:widgets:documentform.html.twig') }}
+            </div>
         </div>
 
     </div><!-- /.container -->

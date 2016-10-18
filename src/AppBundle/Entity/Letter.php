@@ -2,10 +2,11 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Letter
+ * Represents a letter in our catalog
  *
  * @ORM\Table(name="letter")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\LetterRepository")
@@ -78,11 +79,17 @@ class Letter implements \JsonSerializable
     private $dateCreated;
 
     /**
+     * @ORM\OneToMany(targetEntity="Document", mappedBy="letter")
+     */
+    private $documents;
+
+    /**
      * Letter constructor.
      */
     public function __construct()
     {
         $this->setDateCreated(new \DateTime());
+        $this->documents = new ArrayCollection();
     }
 
     /**
@@ -118,8 +125,6 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Get id
-     *
      * @return int
      */
     public function getId()
@@ -128,11 +133,8 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Set nameFirst
-     *
      * @param string $nameFirst
-     *
-     * @return Letter
+     * @return $this
      */
     public function setNameFirst($nameFirst)
     {
@@ -142,8 +144,6 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Get nameFirst
-     *
      * @return string
      */
     public function getNameFirst()
@@ -152,11 +152,8 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Set nameLast
-     *
      * @param string $nameLast
-     *
-     * @return Letter
+     * @return $this
      */
     public function setNameLast($nameLast)
     {
@@ -166,8 +163,6 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Get nameLast
-     *
      * @return string
      */
     public function getNameLast()
@@ -176,11 +171,8 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Set originYear
-     *
      * @param integer $originYear
-     *
-     * @return Letter
+     * @return $this
      */
     public function setOriginYear($originYear)
     {
@@ -190,8 +182,6 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Get originYear
-     *
      * @return int
      */
     public function getOriginYear()
@@ -200,11 +190,8 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Set rating
-     *
      * @param integer $rating
-     *
-     * @return Letter
+     * @return $this
      */
     public function setRating($rating)
     {
@@ -214,8 +201,6 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Get rating
-     *
      * @return int
      */
     public function getRating()
@@ -224,11 +209,8 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Set letterType
-     *
      * @param integer $letterType
-     *
-     * @return Letter
+     * @return $this
      */
     public function setLetterType($letterType)
     {
@@ -238,8 +220,6 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Get letterType
-     *
      * @return string
      */
     public function getLetterType()
@@ -248,11 +228,8 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Set recipientCategory
-     *
      * @param string $recipientCategory
-     *
-     * @return Letter
+     * @return $this
      */
     public function setRecipientCategory($recipientCategory)
     {
@@ -262,8 +239,6 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Get recipientCategory
-     *
      * @return string
      */
     public function getRecipientCategory()
@@ -272,11 +247,8 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Set comment
-     *
      * @param string $comment
-     *
-     * @return Letter
+     * @return $this
      */
     public function setComment($comment)
     {
@@ -286,8 +258,6 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Get comment
-     *
      * @return string
      */
     public function getComment()
@@ -296,11 +266,8 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Set dateCreated
-     *
      * @param \DateTime $dateCreated
-     *
-     * @return Letter
+     * @return $this
      */
     public function setDateCreated($dateCreated)
     {
@@ -310,13 +277,37 @@ class Letter implements \JsonSerializable
     }
 
     /**
-     * Get dateCreated
-     *
      * @return \DateTime
      */
     public function getDateCreated()
     {
         return $this->dateCreated;
     }
-}
 
+    /**
+     * @param Document $document
+     * @return $this
+     */
+    public function addDocument(Document $document)
+    {
+        $this->documents[] = $document;
+
+        return $this;
+    }
+
+    /**
+     * @param Document $document
+     */
+    public function removeDocument(Document $document)
+    {
+        $this->documents->removeElement($document);
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+}

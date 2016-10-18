@@ -120,6 +120,7 @@ assetic:
                 - "@AppBundle/Resources/public/js/dropzone.min.js"
 
 knp_gaufrette:
+    stream_wrapper: ~
     adapters:
         jimbox_data:
             aws_s3:
@@ -127,6 +128,7 @@ knp_gaufrette:
                 bucket_name: '%aws_s3_bucket%'
                 options:
                     directory: 'letters'
+                    create: true
     filesystems:
         letters:
             adapter: jimbox_data
@@ -135,7 +137,8 @@ knp_gaufrette:
 services:
     acme.aws_s3.client:
         class: Aws\S3\S3Client
-        factory: Aws\S3\S3Client
+        factory_class: Aws\S3\S3Client
+        factory_method: 'factory'
         arguments:
             -
                 key: '%aws_key%'

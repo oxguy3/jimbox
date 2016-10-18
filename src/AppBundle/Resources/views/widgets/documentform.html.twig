@@ -1,0 +1,9 @@
+{{ form_start(documentForm, {'action': path('document_upload', {'id': letterId}), 'attr': {'id': 'document_form', 'class': 'dropzone'}}) }}
+    {% for child in [documentForm.file] %}
+        <div class="form-group col-sm-12">
+            {{ form_errors(child) }}
+            {{ form_widget(child) }}
+        </div>
+    {% endfor %}
+<input type="submit" value="Submit" class="btn btn-primary" />
+{{ form_end(documentForm) }}

@@ -2,12 +2,16 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Document;
 use AppBundle\Entity\Letter;
 use AppBundle\Form\LetterType;
+use AppBundle\Form\DocumentType;
+use Gaufrette\StreamWrapper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
@@ -20,6 +24,84 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/letter/{id}/docs/upload", name="document_upload")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function documentUploadAction(Request $request, $id)
+    {
+        // get the Letter in question
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Letter');
+        $qb = $repo->createQueryBuilder('l')
+            ->where('l.id = :id')
+            ->setParameter('id', $id);
+        $letter = $qb->getQuery()->getOneOrNullResult();
+
+        if ($letter == null) {
+            throw $this->createNotFoundException('Letter #'.$id.' does not exist.');
+        }
+
+        // let's validate the document form
+        $document = new Document();
+
+        $form = $this->createForm(DocumentType::class, $document);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $document = $form->getData();
+            $document->setLetter($letter);
+            $file = $document->getFile();
+
+            $filesystem = $this->container->get('knp_gaufrette.filesystem_map')->get('letters');
+            $adapter    = $filesystem->getAdapter();
+//            $adapter->setMetadata($id.'/'.$document->getName(), array('contentType' => $file->getClientMimeType()));
+            $adapter->write($id.'/'.$document->getName(), file_get_contents($file->getPathname()));
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($document);
+            $em->flush();
+
+            return $this->redirectToRoute('letter_view', ['id' => $letter->getId()]);
+        }
+
+        return $this->render('AppBundle:default:letters_new.html.twig', array(
+            'letterForm' => $form->createView(),
+        ));
+    }
+
+    /**
+     * @Route("/letter/{id}/docs/get/{file}", name="document_read")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function documentReadAction(Request $request, $id, $file)
+    {
+        $filesystem = $this->container->get('knp_gaufrette.filesystem_map')->get('letters');
+        $map = StreamWrapper::getFilesystemMap();
+        $map->set('letters', $filesystem);
+        $filepath = 'gaufrette://letters/'.$id.'/'.$file;
+
+        $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($filepath);
+        return $response;
+    }
+
+//    /**
+//     * @Route("/letter/{id}/docs/delete/{docid}", name="document_read")
+//     * @param Request $request
+//     * @return \Symfony\Component\HttpFoundation\Response
+//     */
+//    public function documentDeleteAction(Request $request, $id, $docid)
+//    {
+//        $filesystem = $this->container->get('knp_gaufrette.filesystem_map')->get('letters');
+//        $map = StreamWrapper::getFilesystemMap();
+//        $map->set('letters', $filesystem);
+//        $filepath = 'gaufrette://letters/'.$id.'/'.$file;
+//
+//        $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($filepath);
+//        return $response;
+//    }
+
+    /**
      * @Route("/letters/new", name="letters_new")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
@@ -29,7 +111,6 @@ class DefaultController extends Controller
         $letter = new Letter();
 
         $form = $this->createForm(LetterType::class, $letter);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -64,19 +145,71 @@ class DefaultController extends Controller
      */
     public function letterViewAction(Request $request, $id)
     {
-        $repo = $this->getDoctrine()->getRepository('AppBundle:Letter');
-        $qb = $repo->createQueryBuilder('l')
+        $repoLtrs = $this->getDoctrine()->getRepository('AppBundle:Letter');
+        $qbLtrs   = $repoLtrs->createQueryBuilder('l')
             ->where('l.id = :id')
             ->setParameter('id', $id);
-        $letter = $qb->getQuery()->getOneOrNullResult();
+        $letter = $qbLtrs->getQuery()->getOneOrNullResult();
+
+        if (is_null($letter)) {
+            throw $this->createNotFoundException('The letter does not exist.');
+        }
+
+        $repoDocs = $this->getDoctrine()->getRepository('AppBundle:Document');
+        $qbDocs   = $repoDocs->createQueryBuilder('d')
+            ->where('d.letter = :l')
+            ->setParameter('l', $letter);
+        $docs = $qbDocs->getQuery()->getResult();
+
+        $document = new Document();
+        $form = $this->createForm(DocumentType::class, $document);
 
         return $this->render('AppBundle:default:letter_view.html.twig', [
             'letter' => $letter->jsonSerialize(),
+            'documents' => $docs,
+            'documentForm' => $form->createView()
         ]);
     }
 
+
     /**
-     * @Route("/api/letters", name="api_letters")
+     * @Route("/letter/{id}/edit", name="letters_edit")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function letterEditAction(Request $request, $id)
+    {
+        $repoLtrs = $this->getDoctrine()->getRepository('AppBundle:Letter');
+        $qbLtrs   = $repoLtrs->createQueryBuilder('l')
+            ->where('l.id = :id')
+            ->setParameter('id', $id);
+        $letter = $qbLtrs->getQuery()->getOneOrNullResult();
+
+        if (is_null($letter)) {
+            throw $this->createNotFoundException('The letter does not exist.');
+        }
+
+        $form = $this->createForm(LetterType::class, $letter);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $letter = $form->getData();
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($letter);
+            $em->flush();
+
+            return $this->redirectToRoute('letter_view', ['id' => $letter->getId()]);
+        }
+
+        return $this->render('AppBundle:default:letter_edit.html.twig', array(
+            'letter'     => $letter->jsonSerialize(),
+            'letterForm' => $form->createView(),
+        ));
+    }
+
+    /**
+     * @Route("/letters/json", name="letters_json")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */

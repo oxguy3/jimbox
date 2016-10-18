@@ -29,6 +29,8 @@
                             <th>First</th>
                             <th>Year</th>
                             <th>Rating</th>
+                            <th>Type</th>
+                            <th>Recipient</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -38,6 +40,8 @@
                             <th>First</th>
                             <th>Year</th>
                             <th>Rating</th>
+                            <th>Type</th>
+                            <th>Recipient</th>
                         </tr>
                     </tfoot>
                     <tbody></tbody>
@@ -65,7 +69,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ path('api_letters') }}",
+                    url: "{{ path('letters_json') }}",
                     "dataSrc": function(json) {
                         for (var i = 0; i<json.data.length; i++) {
                             json.data[i]['_buttons'] = '<a href="/letter/'+json.data[i]['id']+'" class="btn btn-primary btn-xs" title="View details"><span class="glyphicon glyphicon-eye-open"></span></a>';
@@ -79,12 +83,14 @@
                         "orderable":      false,
                         "searchable":     false,
                         "data":           "_buttons",
-                        "defaultContent": ""//"<button class='btn btn-primary btn-xs' title='View details'><span class='glyphicon glyphicon-eye-open'></span></button>&nbsp;<button class='btn btn-danger btn-xs' title='Delete'><span class='glyphicon glyphicon-trash'></span></button>"
+                        "defaultContent": ""//"<button class='btn btn-danger btn-xs' title='Delete'><span class='glyphicon glyphicon-trash'></span></button>"
                     },
                     { data: "nameLast" },
                     { data: "nameFirst" },
                     { data: "originYear" },
-                    { data: "rating" }
+                    { data: "rating" },
+                    { data: "letterType" },
+                    { data: "recipientCategory" }
                 ],
                 "order": [
                     [ 1, "asc" ],

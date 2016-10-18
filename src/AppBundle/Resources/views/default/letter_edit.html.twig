@@ -1,0 +1,26 @@
+{% extends '@App/base.html.twig' %}
+
+{% block title %}Editing Letter #{{ letter.id }}{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        body {
+            padding-top: 50px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {{ include('AppBundle:widgets:nav.html.twig') }}
+
+    <div class="container">
+
+        <h1>Editing Letter #{{ letter.id }}</h1>
+
+        {{ include('AppBundle:widgets:letterform.html.twig') }}
+
+    </div><!-- /.container -->
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}
