@@ -27,5 +27,5 @@ parameters:
     # login accounts
     users:
         jimbox:
-            password: changeme
+            password: '$2y$13$NL7IwMfTThpS8auord.JhODr0TkJxs/bjk41k/7kuzzmsUitAc3fa'
             roles: ROLE_USER
