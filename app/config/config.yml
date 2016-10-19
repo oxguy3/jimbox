@@ -120,14 +120,14 @@ assetic:
                 - "@AppBundle/Resources/public/js/dropzone.min.js"
 
 knp_gaufrette:
-    stream_wrapper: ~
+    stream_wrapper:
+        protocol: gaufrette
     adapters:
         jimbox_data:
             aws_s3:
                 service_id: 'acme.aws_s3.client'
                 bucket_name: '%aws_s3_bucket%'
                 options:
-                    directory: 'letters'
                     create: true
     filesystems:
         letters:

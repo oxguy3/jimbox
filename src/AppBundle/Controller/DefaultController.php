@@ -9,8 +9,12 @@ use AppBundle\Form\DocumentType;
 use Gaufrette\StreamWrapper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DefaultController extends Controller
 {
@@ -53,7 +57,7 @@ class DefaultController extends Controller
 
             $filesystem = $this->container->get('knp_gaufrette.filesystem_map')->get('letters');
             $adapter    = $filesystem->getAdapter();
-//            $adapter->setMetadata($id.'/'.$document->getName(), array('contentType' => $file->getClientMimeType()));
+            $adapter->setMetadata($id.'/'.$document->getName(), array('contentType' => $file->getClientMimeType()));
             $adapter->write($id.'/'.$document->getName(), file_get_contents($file->getPathname()));
 
             $em = $this->getDoctrine()->getManager();
@@ -67,19 +71,20 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/letter/{id}/docs/get/{file}", name="document_read")
+     * @Route("/letter/{id}/docs/{file}", name="document_read")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function documentReadAction(Request $request, $id, $file)
     {
-        $filesystem = $this->container->get('knp_gaufrette.filesystem_map')->get('letters');
-        $map = StreamWrapper::getFilesystemMap();
-        $map->set('letters', $filesystem);
-        $filepath = 'gaufrette://letters/'.$id.'/'.$file;
+        $key      = $id.'/'.$file;
+        $s3bucket = $this->container->getParameter('aws_s3_bucket');
 
-        $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($filepath);
-        return $response;
+        $s3client = $this->container->get('acme.aws_s3.client');
+        $request  = $s3client->get($s3bucket.'/'.$key);
+        $url      = $s3client->createPresignedUrl($request, '+1 hour');
+
+        return new RedirectResponse($url, 302);
     }
 
 //    /**

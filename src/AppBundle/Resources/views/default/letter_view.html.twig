@@ -116,7 +116,7 @@
                                 <a href="#" class="pull-right text-danger">
                                     <span class="glyphicon glyphicon-trash"></span>
                                 </a>
-                                <a href="{{ letter.id }}/docs/get/{{ d.name|url_encode }}">
+                                <a href="{{ path('document_read', {'id': letter.id, 'file': d.name}) }}">
                                     {{ d.name|e }}
                                 </a>
                             </li>
