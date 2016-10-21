@@ -7,8 +7,8 @@
                 {{ form_widget(child, {'attr': {'class': 'form-control'}}) }}
             </div>
         {% endfor %}
-        {% for child in [letterForm.originYear, letterForm.rating, letterForm.letterType, letterForm.recipientCategory] %}
-            <div class="form-group col-sm-3">
+        {% for child in [letterForm.originYear, letterForm.originMonth, letterForm.rating, letterForm.letterType, letterForm.recipientCategory, letterForm.home] %}
+            <div class="form-group col-sm-2">
                 {{ form_label(child) }}
                 {{ form_errors(child) }}
                 {{ form_widget(child, {'attr': {'class': 'form-control'}}) }}

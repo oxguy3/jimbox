@@ -26,14 +26,19 @@ class LetterType extends AbstractType
             ])
             ->add('originYear', IntegerType::class, [
                 'required' => false,
+                'label'    => 'Year',
+            ])
+            ->add('originMonth', IntegerType::class, [
+                'required' => false,
+                'label'    => 'Month',
             ])
             ->add('rating', ChoiceType::class, [
                 'required' => true,
                 'choices'  => [
                     0 => '0 - None',
-                    1 => '1 - Poor',
-                    2 => '2 - Fair',
-                    3 => '3 - Excellent',
+                    1 => '1 - No',
+                    2 => '2 - Maybe',
+                    3 => '3 - Yes',
                 ],
             ])
             ->add('letterType', ChoiceType::class, [
@@ -52,7 +57,23 @@ class LetterType extends AbstractType
                     'critic' => 'critic',
                     'family' => 'family',
                     'lover'  => 'lover',
+                    'mother' => 'mother',
+                    'child'  => 'child',
+                    'spouse' => 'spouse',
                     'other'  => 'other',
+                ],
+                'label'    => 'Category',
+            ])
+            ->add('home', ChoiceType::class, [
+                'required' => true,
+                'choices'  => [
+                    'Houghton'     => 'Houghton',
+                    'Ransom'       => 'Ransom',
+                    'Schlesinger'  => 'Schlesinger',
+                    'NY Public'    => 'NY Public',
+                    'Illinois'     => 'Illinois',
+                    'Personal'     => 'Personal',
+                    'Other'        => 'Other',
                 ],
             ])
             ->add('comment', TextareaType::class, [

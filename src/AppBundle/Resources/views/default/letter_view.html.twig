@@ -31,8 +31,12 @@
                             <td style="width: 70%;">{{ letter.nameFirst|e }} {{ letter.nameLast|e }}</td>
                         </tr>
                         <tr>
-                            <th>Origin year</th>
-                            <td>{{ letter.originYear|e }}</td>
+                            <th>Origin date</th>
+                            {% if letter.originMonth != 0 %}
+                                <td>{{ "%02d"|format(letter.originMonth) }}/{{ letter.originYear|e }}</td>
+                            {% else %}
+                                <td>{{ letter.originYear|e }}</td>
+                            {% endif %}
                         </tr>
                         <tr>
                             <th>Rating</th>
@@ -45,6 +49,10 @@
                         <tr>
                             <th>Recipient category</th>
                             <td>{{ letter.recipientCategory|e }}</td>
+                        </tr>
+                        <tr>
+                            <th>Home</th>
+                            <td>{{ letter.home|e }}</td>
                         </tr>
                         <tr>
                             <th>Uploaded on</th>

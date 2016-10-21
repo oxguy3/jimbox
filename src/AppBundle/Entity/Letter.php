@@ -46,6 +46,13 @@ class Letter implements \JsonSerializable
     /**
      * @var int
      *
+     * @ORM\Column(name="originMonth", type="integer", nullable=true)
+     */
+    private $originMonth;
+
+    /**
+     * @var int
+     *
      * @ORM\Column(name="rating", type="integer", nullable=true)
      */
     private $rating;
@@ -63,6 +70,13 @@ class Letter implements \JsonSerializable
      * @ORM\Column(name="recipientCategory", type="string", length=255, nullable=true)
      */
     private $recipientCategory;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="home", type="string", length=255, nullable=true)
+     */
+    private $home;
 
     /**
      * @var string
@@ -102,9 +116,11 @@ class Letter implements \JsonSerializable
             'nameFirst'         => $this->nameFirst,
             'nameLast'          => $this->nameLast,
             'originYear'        => $this->originYear,
+            'originMonth'       => $this->originMonth,
             'rating'            => $this->rating,
             'letterType'        => $this->letterType,
             'recipientCategory' => $this->recipientCategory,
+            'home'              => $this->home,
             'comment'           => $this->comment,
             'dateCreated'       => $this->dateCreated
         ];
@@ -190,6 +206,25 @@ class Letter implements \JsonSerializable
     }
 
     /**
+     * @return int
+     */
+    public function getOriginMonth()
+    {
+        return $this->originMonth;
+    }
+
+    /**
+     * @param int $originMonth
+     * @return $this
+     */
+    public function setOriginMonth($originMonth)
+    {
+        $this->originMonth = $originMonth;
+
+        return $this;
+    }
+
+    /**
      * @param integer $rating
      * @return $this
      */
@@ -244,6 +279,25 @@ class Letter implements \JsonSerializable
     public function getRecipientCategory()
     {
         return $this->recipientCategory;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHome()
+    {
+        return $this->home;
+    }
+
+    /**
+     * @param string $home
+     * @return $this
+     */
+    public function setHome($home)
+    {
+        $this->home = $home;
+
+        return $this;
     }
 
     /**
