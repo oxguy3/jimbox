@@ -23,9 +23,11 @@
 
         <div class="starter-template">
             <div class="center-block">
-                {% image '@AppBundle/Resources/public/images/j-tile.png' %}
-                    <img src="{{ asset_url }}" alt="J letter tile" />
-                {% endimage %}
+                <a href="{{ path('letters_list') }}">
+                    {% image '@AppBundle/Resources/public/images/j-tile.png' %}
+                        <img src="{{ asset_url }}" alt="J letter tile" />
+                    {% endimage %}
+                </a>
             </div>
             <h1>Welcome to Jimbox!</h1>
             <p class="lead">Use the buttons above to select an action.</p>
