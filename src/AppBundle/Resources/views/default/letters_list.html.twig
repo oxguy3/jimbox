@@ -9,6 +9,7 @@
         }
         #letters tfoot th input {
             font-weight: normal;
+            max-width:60px;
         }
 
         /* hiding global search bar until it is implemented on the server-side*/
@@ -33,6 +34,7 @@
                             <th>Last</th>
                             <th>First</th>
                             <th>Year</th>
+                            <th>Month</th>
                             <th>Rating</th>
                             <th>Type</th>
                             <th>Recipient</th>
@@ -45,6 +47,7 @@
                             <th>Last</th>
                             <th>First</th>
                             <th>Year</th>
+                            <th>Month</th>
                             <th>Rating</th>
                             <th>Type</th>
                             <th>Recipient</th>
@@ -73,6 +76,7 @@
             } );
 
             var table = $('#letters').DataTable({
+                bAutoWidth: false,
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -90,20 +94,23 @@
                         "orderable":      false,
                         "searchable":     false,
                         "data":           "_buttons",
-                        "defaultContent": ""//"<button class='btn btn-danger btn-xs' title='Delete'><span class='glyphicon glyphicon-trash'></span></button>"
+                        "defaultContent": "",
+                        "width": "5%"
                     },
-                    { data: "nameLast" },
-                    { data: "nameFirst" },
-                    { data: "originYear" },
-                    { data: "rating" },
-                    { data: "letterType" },
-                    { data: "recipientCategory" },
-                    { data: "home" }
+                    { data: "nameLast", width: "16%" },
+                    { data: "nameFirst", width: "16%" },
+                    { data: "originYear", width: "5%" },
+                    { data: "originMonth", width: "5%" },
+                    { data: "rating", width: "5%" },
+                    { data: "letterType", width: "16%" },
+                    { data: "recipientCategory", width: "16%" },
+                    { data: "home", width: "16%" }
                 ],
                 "order": [
                     [ 1, "asc" ],
                     [ 2, "asc" ],
-                    [ 3, "asc" ]
+                    [ 3, "asc" ],
+                    [ 4, "asc" ]
                 ],
                 "iDisplayLength": 100
             });
