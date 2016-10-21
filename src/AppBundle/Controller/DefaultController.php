@@ -6,15 +6,12 @@ use AppBundle\Entity\Document;
 use AppBundle\Entity\Letter;
 use AppBundle\Form\LetterType;
 use AppBundle\Form\DocumentType;
-use Gaufrette\StreamWrapper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DefaultController extends Controller
 {
@@ -71,7 +68,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/letter/{id}/docs/{file}", name="document_read")
+     * @Route("/letter/{id}/doc/{file}", name="document_read")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -87,21 +84,58 @@ class DefaultController extends Controller
         return new RedirectResponse($url, 302);
     }
 
-//    /**
-//     * @Route("/letter/{id}/docs/delete/{docid}", name="document_read")
-//     * @param Request $request
-//     * @return \Symfony\Component\HttpFoundation\Response
-//     */
-//    public function documentDeleteAction(Request $request, $id, $docid)
-//    {
-//        $filesystem = $this->container->get('knp_gaufrette.filesystem_map')->get('letters');
-//        $map = StreamWrapper::getFilesystemMap();
-//        $map->set('letters', $filesystem);
-//        $filepath = 'gaufrette://letters/'.$id.'/'.$file;
-//
-//        $response = new \Symfony\Component\HttpFoundation\BinaryFileResponse($filepath);
-//        return $response;
-//    }
+    /**
+     * @Route("/letter/{id}/docs/delete/{docid}", name="document_delete")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function documentDeleteAction(Request $request, $id, $docid)
+    {
+        // TODO everything about this function is terrible and i hate it
+
+        // get the Document in question
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Document');
+        $qb = $repo->createQueryBuilder('d')
+            ->where('d.id = :id')
+            ->setParameter('id', $docid);
+        $document = $qb->getQuery()->getOneOrNullResult();
+
+        if ($document == null) {
+            throw $this->createNotFoundException('Document #'.$docid.' does not exist.');
+        }
+        if ($document->getLetter()->getId() != $id) {
+            throw $this->createNotFoundException('Document #'.$docid.' not associated with Letter #'.$id.'.');
+        }
+
+        $form = $this->createDocumentDeleteForm($document);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $filesystem = $this->container->get('knp_gaufrette.filesystem_map')->get('letters');
+            $adapter    = $filesystem->getAdapter();
+            $adapter->delete($id.'/'.$document->getName());
+
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($document);
+            $em->flush();
+
+            return $this->redirectToRoute('letter_view', ['id' => $document->getLetter()->getId()]);
+        }
+
+        throw $this->createAccessDeniedException();
+    }
+
+    private function createDocumentDeleteForm(Document $document)
+    {
+        $form = $this->createFormBuilder($document)
+            ->setAction($this->generateUrl('document_delete', [
+                'id'    => $document->getLetter()->getId(),
+                'docid' => $document->getId(),
+            ]))
+            ->getForm();
+        return $form;
+    }
 
     /**
      * @Route("/letters/new", name="letters_new")
@@ -166,10 +200,16 @@ class DefaultController extends Controller
         $document = new Document();
         $form = $this->createForm(DocumentType::class, $document);
 
+        $documentDeleteForms = [];
+        foreach ($docs as $d) {
+            $documentDeleteForms[] = $this->createDocumentDeleteForm($d)->createView();
+        }
+
         return $this->render('AppBundle:default:letter_view.html.twig', [
-            'letter' => $letter->jsonSerialize(),
-            'documents' => $docs,
-            'documentForm' => $form->createView()
+            'letter'         => $letter->jsonSerialize(),
+            'documents'      => $docs,
+            'documentForm'   => $form->createView(),
+            'docDeleteForms' => $documentDeleteForms,
         ]);
     }
 
@@ -315,6 +355,5 @@ class DefaultController extends Controller
         $obj = new \stdClass();
         $obj->error = $message;
         return new JsonResponse($obj);
-
     }
 }

@@ -68,9 +68,12 @@
                     <ul class="list-group">
                         {% for d in documents %}
                             <li class="list-group-item">
-                                <a href="#" class="pull-right text-danger">
-                                    <span class="glyphicon glyphicon-trash"></span>
-                                </a>
+                                {% set deleteForm = docDeleteForms[loop.index0] %}
+                                {{ form_start(deleteForm) }}
+                                    <button type="submit" class="btn btn-xs btn-danger pull-right">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </button>
+                                {{ form_end(deleteForm) }}
                                 <a href="{{ path('document_read', {'id': letter.id, 'file': d.name}) }}">
                                     {{ d.name|e }}
                                 </a>
