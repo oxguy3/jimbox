@@ -70,7 +70,8 @@
                             <li class="list-group-item">
                                 {% set deleteForm = docDeleteForms[loop.index0] %}
                                 {{ form_start(deleteForm) }}
-                                    <button type="submit" class="btn btn-xs btn-danger pull-right">
+                                    <button data-filename="{{ d.name|e('html_attr') }}"
+                                            class="document-delete-btn btn btn-xs btn-danger pull-right">
                                         <span class="glyphicon glyphicon-trash"></span>
                                     </button>
                                 {{ form_end(deleteForm) }}
@@ -93,4 +94,13 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script>
+        $('.document-delete-btn').click(function() {
+            var form = $(this).parents("form")[0];
+            var filename = $(this).attr('data-filename');
+            if (window.confirm("Are you sure you want to delete "+filename+"?")) {
+                form.submit();
+            }
+        });
+    </script>
 {% endblock %}
