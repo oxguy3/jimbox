@@ -1,3 +1,7 @@
+web:
+    resource: "@WebBundle/Controller/"
+    type:     annotation
+    prefix:   /
 app:
     resource: "@AppBundle/Controller/DefaultController.php"
     type:     annotation
